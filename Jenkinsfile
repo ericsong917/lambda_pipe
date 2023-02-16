@@ -23,30 +23,35 @@ pipeline {
     }
     stage('upload lambda 1 and lambda 2'){
       steps{
-        echo 'upload'
-        sh 'aws lambda update-function-code --function-name eric_lambda --zip-file fileb://lambda_function.zip'
-        sh 'aws lambda update-function-code --function-name eric_lambda2 --zip-file fileb://lambda_function2.zip'
-        def status1 =""
-        def status2=""
-        def check=true
+        script{
+          echo 'upload'
+          sh 'aws lambda update-function-code --function-name eric_lambda --zip-file fileb://lambda_function.zip'
+          sh 'aws lambda update-function-code --function-name eric_lambda2 --zip-file fileb://lambda_function2.zip'
+          def status1 =""
+          def status2=""
+          def check=true
+        }
       }
     }//LastUpdateStatus Successful
 
     stage('check status lambda'){
       steps{
-        while(check){
-          sh 'aws lambda get-function --function-name eric_lambda| tee lambda1.txt'
-          sh 'aws lambda get-function --function-name eric_lambda2| tee lambda2.txt'
-          status1=sh(script:'cat lambda1.txt|jq -r ".Configuration.LastUpdateStatus"',returnStdout:true ).toString().trim()
-          status2=sh(script:'cat lambda2.txt|jq -r ".Configuration.LastUpdateStatus"',returnStdout:true ).toString().trim()
-          if(status1.equals("Successful") && status2.equals("Successful")){
-            check=false
-          }
-          else{
-            echo status1
-            echo status2
+        script{
+          while(check){
+            sh 'aws lambda get-function --function-name eric_lambda| tee lambda1.txt'
+            sh 'aws lambda get-function --function-name eric_lambda2| tee lambda2.txt'
+            status1=sh(script:'cat lambda1.txt|jq -r ".Configuration.LastUpdateStatus"',returnStdout:true ).toString().trim()
+            status2=sh(script:'cat lambda2.txt|jq -r ".Configuration.LastUpdateStatus"',returnStdout:true ).toString().trim()
+            if(status1.equals("Successful") && status2.equals("Successful")){
+              check=false
+            }
+            else{
+              echo status1
+              echo status2
+            }
           }
         }
+
       }
 
 
