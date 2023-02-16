@@ -27,9 +27,7 @@ pipeline {
           echo 'upload'
           sh 'aws lambda update-function-code --function-name eric_lambda --zip-file fileb://lambda_function.zip'
           sh 'aws lambda update-function-code --function-name eric_lambda2 --zip-file fileb://lambda_function2.zip'
-          def status1 =""
-          def status2=""
-          def check=true
+
         }
       }
     }//LastUpdateStatus Successful
@@ -37,6 +35,9 @@ pipeline {
     stage('check status lambda'){
       steps{
         script{
+          def status1 =""
+          def status2=""
+          def check=true
           while(check){
             sh 'aws lambda get-function --function-name eric_lambda| tee lambda1.txt'
             sh 'aws lambda get-function --function-name eric_lambda2| tee lambda2.txt'
