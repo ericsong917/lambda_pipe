@@ -11,7 +11,7 @@ pipeline {
         git credentialsId: 'token_for_github', url: "https://github.com/ericsong917/lambda_pipe"
       }
     }
-    stage('zip lambda 1 and lambda2'){
+    stage('zip lambda 1 and lambda2'){ //라이브러리와 람다 코드를 압축
       steps{
         echo 'zip lambda 1 and lambda2'
         script{
@@ -21,7 +21,7 @@ pipeline {
       }
 
     }
-    stage('upload lambda 1 and lambda 2'){
+    stage('upload lambda 1 and lambda 2'){ //업로드
       steps{
         script{
           echo 'upload'
@@ -32,7 +32,7 @@ pipeline {
       }
     }//LastUpdateStatus Successful
 
-    stage('check status lambda'){
+    stage('check status lambda'){ //람다 함수 deploy 상황 체크, 완료시 파이프라인 종료
       steps{
         script{
           def status1 =""
